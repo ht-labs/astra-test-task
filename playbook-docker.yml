@@ -40,3 +40,61 @@
     - name: UFW - Enable
       community.general.ufw:
         state: enabled
+
+    - name: Copy certs
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/ssl/"
+        dest: "/etc/ssl/"
+        owner: "{{ ansible_facts['env']['SUDO_USER'] }}"
+
+    - name: Copy nginx config files
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/nginx/"
+        dest: "/etc/nginx/"
+        owner: "{{ ansible_facts['env']['SUDO_USER'] }}"
+
+    - name: Install docker.io
+      apt:
+        name: docker.io
+        state: latest
+        update_cache: true
+    
+    - name: Install docker-compose
+      apt:
+        name: docker-compose
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: adding current user "{{ ansible_facts['env']['SUDO_USER'] }}" to group docker
+      user:
+        name: "{{ ansible_facts['env']['SUDO_USER'] }}"
+        groups: docker
+        append: yes
+
+    - name: Pull nginx Docker image
+      community.docker.docker_image:
+        name: "nginx:latest"
+        source: pull
+    
+    - name: Create volume
+      docker_volume:
+        name: nginx-data
+        driver: local
+    
+    - name: Create nginx container
+      docker_container:
+        name: nginx
+        image: nginx
+        state: started
+        ports:
+          - "80:80"
+          - "443:443"
+        volumes:
+          - "nginx-data:/usr/share/nginx/html:ro"
+          - "/etc/ssl:/etc/ssl"
+          - "/etc/nginx/conf.d:/etc/nginx/conf.d"
