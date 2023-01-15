@@ -11,7 +11,7 @@ This project is an entry test task for Astra.
 Project is created with:
 * Terraform v1.3.7
 * Ansible v2.13.7
-* Nginx v1.14.1
+* Nginx v1.23.3
 
 ## Setup
 
@@ -45,7 +45,29 @@ users:
     - <key name> <pub key> <local-user@host-machine>
 ```
 
+3. Generate (or obtain otherwise) SSL certificate
+3.1. Place the .crt file into <project_dir>/ssl/certs/ directory
+3.2. Place the .key file into <project_dir>/ssl/private/ directory
+3.3. Add your certificate information into /nginx/conf.d/astra.conf file by updating placeholders
+
+WARNING! 
+DO NOT EXPOSE SSL CERTIFICATE FILES
+
+4. Run main.tf Terraform project file from the project directory
+```bash
+terraform apply
+```
+
+5. After completion, run Ansible playbook, playbook-docker.yml under your YC service account name
+```bash
+ansible-playbook -i inventory playbook-docker.yml -u <Service Account Name>
+```
+
+6. Go to your hostname and IP address in the web-browser to verify that nginx starting page is accessible via https
+
 ## Change log
+
+v0.3.0 - added nginx Docker container into VM, configured to work with SSL certificates via HTTPS 
 
 v0.2.1 - added Setup section into README.md, explaining the project usage steps
 
