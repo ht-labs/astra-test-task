@@ -15,16 +15,16 @@ Project is created with:
 
 ## Setup
 
-# Requirements for host machine
+### Requirements for host machine
 1. Terraform v1.3.7+
 2. Ansible v2.13.7+
 
-# Requirements for Yandex Cloud
+### Requirements for Yandex Cloud
 1. Valid subscription 
 2. Valid Service Account
 3. Static IP address
 
-# Setup
+### Setup steps
 
 1. Create ip.txt file in the following format, by specifying your static YC IP address
 ```txt
