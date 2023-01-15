@@ -67,6 +67,8 @@ ansible-playbook -i inventory playbook-docker.yml -u <Service Account Name>
 
 ## Change log
 
+v0.3.1 - Readme header formatting fix
+
 v0.3.0 - added nginx Docker container into VM, configured to work with SSL certificates via HTTPS 
 
 v0.2.1 - added Setup section into README.md, explaining the project usage steps
